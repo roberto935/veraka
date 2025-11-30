@@ -3,259 +3,1507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veraka - Encuentra el Software Perfecto para tu Empresa</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Veraka - Compara Software, SaaS y AI Tools</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            color: #1a1a1a; 
+            background: white; 
+            font-weight: 400; 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.011em;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.022em;
+        }
+        
+        .chat-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+        }
+        
+        .whatsapp-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 8rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #25D366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s;
+            z-index: 9998;
+            cursor: pointer;
+        }
+        
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6);
+        }
+        
+        .whatsapp-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #25D366;
+            animation: pulse 2s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0B4F9F, #0F7D5E);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(11, 79, 159, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(11, 79, 159, 0.5);
+        }
+        
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 400px;
+            height: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 60px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-window.active {
+            display: flex;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #0B4F9F, #0F7D5E);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: #F7FAFC;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .assistant-avatar {
+            background: linear-gradient(135deg, #0B4F9F, #0F7D5E);
+            color: white;
+        }
+        
+        .user-avatar {
+            background: #E2E8F0;
+            color: #4a5568;
+        }
+        
+        .message-content {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message.user .message-content {
+            background: #0B4F9F;
+            color: white;
+        }
+        
+        .chat-input-area {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #E2E8F0;
+        }
+        
+        .chat-input-box {
+            display: flex;
+            gap: 0.75rem;
+            background: #F7FAFC;
+            border-radius: 12px;
+            padding: 0.5rem;
+            border: 2px solid #E2E8F0;
+        }
+        
+        .chat-input-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.5rem;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        
+        .chat-send-btn {
+            background: #0B4F9F;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .chat-send-btn:hover {
+            background: #094080;
+        }
+        
+        .chat-send-btn:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 0.5rem;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0B4F9F;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .quick-option {
+            background: white;
+            border: 1px solid #E2E8F0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-option:hover {
+            background: #0B4F9F;
+            color: white;
+            border-color: #0B4F9F;
+        }
+        
+        header { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        nav { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0F1C3F;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #2E5AAC;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+        .nav-links { display: flex; gap: 0.5rem; list-style: none; }
+        .nav-item { position: relative; }
+        .nav-item > a { display: flex; align-items: center; gap: 0.3rem; text-decoration: none; color: #4a5568; font-weight: 600; font-size: 0.95rem; padding: 0.75rem 1rem; border-radius: 8px; }
+        .nav-item > a:hover { color: #0B4F9F; background: #F7FAFC; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); min-width: 280px; padding: 1rem 0; margin-top: 0.5rem; }
+        .nav-item:hover .dropdown-menu { display: block; }
+        .dropdown-item { display: block; padding: 0.75rem 1.5rem; color: #4a5568; text-decoration: none; }
+        .dropdown-item:hover { background: #F7FAFC; color: #0B4F9F; }
+        .btn-secondary { background: #0F7D5E; color: white; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; }
+        .btn-primary { background: #0B4F9F; color: white; padding: 0.75rem 1.5rem; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; }
+        
+        .hero-gradient { background: linear-gradient(135deg, #0B4F9F 0%, #0F7D5E 100%); color: white; }
+        .hero-content { max-width: 1400px; margin: 0 auto; padding: 4rem 2rem 6rem; text-align: center; }
+        .hero-text h1 { font-size: 3.8rem; font-weight: 800; margin-bottom: 1.5rem; }
+        .hero-text p { font-size: 1.2rem; margin-bottom: 1rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .hero-text .subtext { font-size: 1rem; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto; opacity: 0.95; }
+        .hero-search { background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 800px; margin: 0 auto 2rem; }
+        .search-title { font-size: 1.5rem; font-weight: 700; color: #0F1C3F; margin-bottom: 2rem; }
+        .search-box { display: flex; background: #F7FAFC; border-radius: 50px; border: 2px solid #E2E8F0; }
+        #searchInput { flex: 1; border: none; background: transparent; padding: 1rem; outline: none; }
+        .search-btn { background: #0B4F9F; color: white; border: none; padding: 1rem 2rem; font-weight: 600; cursor: pointer; border-radius: 50px; margin: 0.25rem; }
+        .search-tags { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+        .search-tag { background: #F7FAFC; color: #4a5568; padding: 0.6rem 1.2rem; border-radius: 50px; cursor: pointer; border: 1px solid #E2E8F0; }
+        .btn-white { background: white; color: #0B4F9F; padding: 1rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s; }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.3); }
+        .btn-outline { background: transparent; color: white; padding: 1rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <a href="index.html" class="logo">Veraka</a>
-                <div class="nav-links">
-                    <a href="#categorias">Categorías</a>
-                    <a href="#como-funciona">Cómo Funciona</a>
-                    <a href="#contact">Contacto</a>
-                    <a href="#" class="btn-primary-nav">Consulta Gratis</a>
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#4CD4A1;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#3BA883;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M12 2C12 2 4 5 4 12C4 19 8 22 12 24C12 24 12 17 12 12C12 12 17 8 22 5C18 3 12 2 12 2Z" fill="url(#leafGradient)"/>
+                        <path d="M12 12C12 12 10 14 10 17C10 20 11 21 12 22" stroke="#2E9B72" stroke-width="0.5" fill="none"/>
+                    </svg>
+                </div>
+                <span>Veraka</span>
+            </a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#software">Software <span style="font-size:0.7rem">▼</span></a>
+                    <div class="dropdown-menu" style="min-width:600px;max-height:600px;overflow-y:auto">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 2rem">
+                            <div>
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem">CATEGORÍAS PRINCIPALES</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('CRM');return false"><div style="font-weight:600;color:#0F1C3F">CRM</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('ERP');return false"><div style="font-weight:600;color:#0F1C3F">ERP</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Sales Tools');return false"><div style="font-weight:600;color:#0F1C3F">Herramientas de Ventas</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Marketing');return false"><div style="font-weight:600;color:#0F1C3F">Marketing</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Security');return false"><div style="font-weight:600;color:#0F1C3F">Seguridad</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Analytics');return false"><div style="font-weight:600;color:#0F1C3F">Analytics & BI</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Collaboration');return false"><div style="font-weight:600;color:#0F1C3F">Colaboración & Productividad</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Customer Service');return false"><div style="font-weight:600;color:#0F1C3F">Servicio al Cliente</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('HR');return false"><div style="font-weight:600;color:#0F1C3F">Recursos Humanos</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Commerce');return false"><div style="font-weight:600;color:#0F1C3F">E-Commerce</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Content Management');return false"><div style="font-weight:600;color:#0F1C3F">Gestión de Contenido</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Design');return false"><div style="font-weight:600;color:#0F1C3F">Diseño</div></a>
+                                
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem;margin-top:1rem">INTELIGENCIA ARTIFICIAL</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('AI Chatbots');return false"><div style="font-weight:600;color:#0F1C3F">AI Chatbots</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Generative AI');return false"><div style="font-weight:600;color:#0F1C3F">IA Generativa</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Machine Learning');return false"><div style="font-weight:600;color:#0F1C3F">Machine Learning</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('AI Writing');return false"><div style="font-weight:600;color:#0F1C3F">Asistente de Escritura IA</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Video Translation');return false"><div style="font-weight:600;color:#0F1C3F">Traducción de Video IA</div></a>
+                            </div>
+                            
+                            <div>
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem">IT & DESARROLLO</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Development');return false"><div style="font-weight:600;color:#0F1C3F">Desarrollo de Software</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('IT Infrastructure');return false"><div style="font-weight:600;color:#0F1C3F">Infraestructura IT</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('IT Management');return false"><div style="font-weight:600;color:#0F1C3F">Gestión IT</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Hosting');return false"><div style="font-weight:600;color:#0F1C3F">Hosting & Cloud</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('CAD');return false"><div style="font-weight:600;color:#0F1C3F">CAD & PLM</div></a>
+                                
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem;margin-top:1rem">OPERACIONES</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Supply Chain');return false"><div style="font-weight:600;color:#0F1C3F">Supply Chain & Logística</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Office Management');return false"><div style="font-weight:600;color:#0F1C3F">Gestión de Oficina</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Governance');return false"><div style="font-weight:600;color:#0F1C3F">Gobernanza & Compliance</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Data Privacy');return false"><div style="font-weight:600;color:#0F1C3F">Privacidad de Datos</div></a>
+                                
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem;margin-top:1rem">PUBLICIDAD & MARKETING</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Digital Advertising');return false"><div style="font-weight:600;color:#0F1C3F">Publicidad Digital</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Marketing Automation');return false"><div style="font-weight:600;color:#0F1C3F">Automatización de Marketing</div></a>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Social Media');return false"><div style="font-weight:600;color:#0F1C3F">Redes Sociales</div></a>
+                                
+                                <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem;margin-top:1rem">INDUSTRIAS VERTICALES</div>
+                                <a href="#" class="dropdown-item" onclick="searchFor('Vertical Industry');return false"><div style="font-weight:600;color:#0F1C3F">Soluciones Verticales</div></a>
+                            </div>
+                        </div>
+                        <div style="border-top:1px solid #E2E8F0;margin:0.5rem 0"></div>
+                        <a href="#" class="dropdown-item" style="text-align:center"><div style="font-weight:600;color:#0B4F9F">Ver todas las categorías →</div></a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="#servicios">Servicios <span style="font-size:0.7rem">▼</span></a>
+                    <div class="dropdown-menu" style="min-width:450px;max-height:600px;overflow-y:auto">
+                        <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem">ASESORÍA</div>
+                        <a href="#" class="dropdown-item"><div style="font-weight:600;color:#0F1C3F">Asesoría Gratuita</div></a>
+                        
+                        <div style="border-top:1px solid #E2E8F0;margin:0.5rem 0"></div>
+                        
+                        <div style="font-size:0.75rem;font-weight:700;color:#718096;padding:0.5rem 1.5rem">CONSULTORES</div>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Adobe Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Adobe Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('AWS Consulting');return false"><div style="font-weight:600;color:#0F1C3F">AWS Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Citrix Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Citrix Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Contpaqi');return false"><div style="font-weight:600;color:#0F1C3F">Contpaqi</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Dayforce Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Dayforce Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Deltek Resellers');return false"><div style="font-weight:600;color:#0F1C3F">Deltek Resellers</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Genesys Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Genesys Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Google Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Google Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('HubSpot Consulting');return false"><div style="font-weight:600;color:#0F1C3F">HubSpot Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('IBM Consulting');return false"><div style="font-weight:600;color:#0F1C3F">IBM Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Infor Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Infor Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Microsoft Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Microsoft Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('NetSuite Consulting');return false"><div style="font-weight:600;color:#0F1C3F">NetSuite Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('NetSuite Resellers');return false"><div style="font-weight:600;color:#0F1C3F">NetSuite Resellers</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Oracle Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Oracle Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Salesforce Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Salesforce Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('SAP Consulting');return false"><div style="font-weight:600;color:#0F1C3F">SAP Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('ServiceNow Consulting');return false"><div style="font-weight:600;color:#0F1C3F">ServiceNow Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Snowflake Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Snowflake Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('TeamViewer');return false"><div style="font-weight:600;color:#0F1C3F">TeamViewer</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('UKG Consulting');return false"><div style="font-weight:600;color:#0F1C3F">UKG Consulting Services</div></a>
+                        <a href="#" class="dropdown-item" onclick="searchFor('Workday Consulting');return false"><div style="font-weight:600;color:#0F1C3F">Workday Consulting Services</div></a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#compradores">Para Compradores <span style="font-size:0.7rem">▼</span></a>
+                    <div class="dropdown-menu" style="min-width:380px">
+                        <a href="https://ecosis.ai/" target="_blank" class="dropdown-item">
+                            <div style="font-weight:600;color:#0F1C3F;margin-bottom:0.25rem">SaaS Management</div>
+                            <div style="font-size:0.85rem;color:#718096">Control total de tus gastos de software.</div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <div style="font-weight:600;color:#0F1C3F;margin-bottom:0.25rem">Comparación de Software</div>
+                            <div style="font-size:0.85rem;color:#718096">Encuentra y estandariza las mejores herramientas.</div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <div style="font-weight:600;color:#0F1C3F;margin-bottom:0.25rem">Finanzas & Renovaciones</div>
+                            <div style="font-size:0.85rem;color:#718096">Automatiza pagos y evita sorpresas en tus contratos.</div>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#vendedores">Para Vendedores <span style="font-size:0.7rem">▼</span></a>
+                    <div class="dropdown-menu" style="min-width:420px">
+                        <a href="#vende-en-veraka" class="dropdown-item">
+                            <div style="font-weight:600;color:#0F1C3F;margin-bottom:0.25rem">Vende en Veraka</div>
+                            <div style="font-size:0.85rem;color:#718096">Conecta con compradores listos para decidir, aumenta tu visibilidad y acelera tus ciclos de venta.</div>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <div style="font-weight:600;color:#0F1C3F;margin-bottom:0.25rem">Conviértete en Partner</div>
+                            <div style="font-size:0.85rem;color:#718096">Accede a precios preferenciales de software y genera ingresos revendiendo dentro del ecosistema Veraka.</div>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="#blog">Blog</a></li>
+            </ul>
+            <div style="display:flex;gap:1rem">
+                <button class="btn-secondary">Login</button>
+                <button class="btn-primary">Agendar Demo</button>
+            </div>
+        </nav>
+    </header>
+
+            <div class="hero-gradient">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Compara software con claridad. Decide más rápido.</h1>
+                <p>Descubre herramientas, agenda demos sin acoso comercial y gestiona todas tus suscripciones desde un solo lugar.</p>
+            </div>
+            <div class="hero-search">
+                <h3 class="search-title">Encuentra tu herramienta ideal</h3>
+                <div class="search-box">
+                    <div style="padding:1rem 1.5rem;color:#0B4F9F">🔍</div>
+                    <input type="text" id="searchInput" placeholder="Buscar CRM, ERP, AI Tools...">
+                    <button class="search-btn">Buscar</button>
+                </div>
+                <div class="search-tags">
+                    <span class="search-tag">CRM</span>
+                    <span class="search-tag">ERP</span>
+                    <span class="search-tag">AI Tools</span>
+                    <span class="search-tag">SaaS</span>
                 </div>
             </div>
+            <div style="display:flex;gap:1rem;margin-top:2rem;justify-content:center;flex-wrap:wrap">
+                <a href="#" class="btn-white">Encuentra tu herramienta</a>
+                <a href="https://calendly.com/tu-usuario" target="_blank" class="btn-outline">Agenda llamada con especialista</a>
+            </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Encuentra el software perfecto<br>para tu empresa</h1>
-            <p class="hero-subtitle">Compara las mejores herramientas del mercado en minutos.<br>Sin acoso comercial. Con expertos que te asesoran gratis.</p>
+    <svg viewBox="0 0 1440 48" style="width:100%;height:48px;display:block;margin-top:-1px">
+        <path fill="#FFF" d="M0,32L30,48C60,64,120,96,180,96C240,96,300,64,360,48C420,32,480,32,540,48C600,64,660,96,720,96C780,96,840,64,900,48C960,32,1020,32,1080,48C1140,64,1200,96,1260,96C1320,96,1380,64,1410,48L1440,32L1440,0L1410,0C1380,0,1320,0,1260,0C1200,0,1140,0,1080,0C1020,0,960,0,900,0C840,0,780,0,720,0C660,0,600,0,540,0C480,0,420,0,360,0C300,0,240,0,180,0C120,0,60,0,30,0L0,0Z"></path>
+    </svg>
+
+    <!-- PROCESO SIMPLIFICADO -->
+    <div style="margin:6rem 2rem 8rem">
+        <h3 style="font-size:2.5rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:1rem">Tu proceso de compra de software, simplificado</h3>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3rem;max-width:1400px;margin:4rem auto">
+            <!-- Paso 1 -->
+            <div style="text-align:center">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;box-shadow:0 8px 24px rgba(11,79,159,0.25)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <div style="position:absolute;top:-8px;right:-8px;width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0B4F9F;font-weight:800;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.15)">1</div>
+                </div>
+                <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Busca y compara</h4>
+                <p style="color:#4a5568;line-height:1.6">Usa nuestro buscador inteligente con IA para encontrar las herramientas ideales según las necesidades específicas de tu empresa.</p>
+            </div>
             
-            <!-- Search Bar -->
-            <div class="search-container">
-                <input type="text" id="mainSearch" placeholder="¿Qué software necesitas? Ej: CRM, contabilidad, nómina..." class="search-input">
-                <button class="search-btn">Buscar</button>
+            <!-- Paso 2 -->
+            <div style="text-align:center">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;box-shadow:0 8px 24px rgba(11,79,159,0.25)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                    <div style="position:absolute;top:-8px;right:-8px;width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0B4F9F;font-weight:800;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.15)">2</div>
+                </div>
+                <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Explora sin presión</h4>
+                <p style="color:#4a5568;line-height:1.6">Accede a demos, videos y comparativas detalladas sin necesidad de dar tu contacto. Tú decides cuándo y con quién hablar.</p>
             </div>
-
-            <!-- Popular Searches -->
-            <div class="popular-searches">
-                <span>Búsquedas populares:</span>
-                <a href="hr.html" class="search-tag">Nómina</a>
-                <a href="finance.html" class="search-tag">Contabilidad</a>
-                <a href="sales.html" class="search-tag">CRM</a>
-                <a href="marketing.html" class="search-tag">Email Marketing</a>
-                <a href="it.html" class="search-tag">Ciberseguridad</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section id="categorias" class="categories">
-        <div class="container">
-            <h2>Explora por Departamento</h2>
-            <p class="section-subtitle">Encuentra las mejores herramientas para cada área de tu negocio</p>
             
-            <div class="category-grid">
-                <a href="hr.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <h3>Recursos Humanos</h3>
-                    <p>Nómina, reclutamiento, evaluaciones</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="finance.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <h3>Finanzas</h3>
-                    <p>Contabilidad, facturación, tesorería</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="marketing.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                    </div>
-                    <h3>Marketing</h3>
-                    <p>Email, redes sociales, automatización</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="sales.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                            <polyline points="17 6 23 6 23 12"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Ventas</h3>
-                    <p>CRM, prospección, pipeline</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="it.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                    <h3>IT y Seguridad</h3>
-                    <p>Ciberseguridad, gestión de TI</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="logistics.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 3h15v13H1z"></path>
-                            <path d="M16 8h4l3 3v5h-7V8z"></path>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                        </svg>
-                    </div>
-                    <h3>Logística</h3>
-                    <p>Inventario, envíos, almacén</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="ai-tools.html" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                    </div>
-                    <h3>Herramientas IA</h3>
-                    <p>Automatización con inteligencia artificial</p>
-                    <span class="tools-count">Top 30 herramientas →</span>
-                </a>
-
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                    </div>
-                    <h3>Otras Categorías</h3>
-                    <p>Explora más soluciones</p>
-                    <span class="tools-count">Ver todas →</span>
-                </a>
+            <!-- Paso 3 -->
+            <div style="text-align:center">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;box-shadow:0 8px 24px rgba(11,79,159,0.25)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <div style="position:absolute;top:-8px;right:-8px;width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0B4F9F;font-weight:800;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.15)">3</div>
+                </div>
+                <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Conecta con vendors</h4>
+                <p style="color:#4a5568;line-height:1.6">Agenda meetings con múltiples proveedores, recibe propuestas personalizadas y compáralas en un solo lugar.</p>
+            </div>
+            
+            <!-- Paso 4 -->
+            <div style="text-align:center">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;position:relative;box-shadow:0 8px 24px rgba(11,79,159,0.25)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <div style="position:absolute;top:-8px;right:-8px;width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#0B4F9F;font-weight:800;font-size:1.1rem;box-shadow:0 4px 12px rgba(0,0,0,0.15)">4</div>
+                </div>
+                <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Gestiona todo desde aquí</h4>
+                <p style="color:#4a5568;line-height:1.6">Centraliza contratos, pagos, facturas y monitorea el uso real de tus herramientas. Todo en una plataforma.</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- How It Works -->
-    <section id="como-funciona" class="how-it-works">
-        <div class="container">
-            <h2>Encuentra tu software ideal en 3 pasos</h2>
-            <div class="steps-grid">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Busca y Compara</h3>
-                    <p>Explora nuestro catálogo de herramientas organizadas por departamento y compara características, precios y opiniones.</p>
+    <!-- BENEFICIOS -->
+    <div style="background:#F7FAFC;padding:6rem 2rem">
+        <h3 style="font-size:2.5rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:4rem">Con Veraka, tomas decisiones más inteligentes</h3>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2.5rem;max-width:1400px;margin:0 auto">
+            <!-- Beneficio 1 -->
+            <div style="background:white;border-radius:12px;padding:2.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:linear-gradient(135deg,rgba(11,79,159,0.1),rgba(15,125,94,0.1));border-radius:50%"></div>
+                <div style="width:56px;height:56px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;position:relative;z-index:1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6"/>
+                        <path d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24"/>
+                        <path d="M1 12h6m6 0h6"/>
+                        <path d="m4.93 19.07 4.24-4.24m5.66-5.66 4.24-4.24"/>
+                    </svg>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Consulta con Expertos</h3>
-                    <p>Agenda una llamada gratuita con nuestros especialistas para resolver dudas y obtener recomendaciones personalizadas.</p>
+                <h4 style="font-size:1.3rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Encuentra lo que realmente necesitas</h4>
+                <p style="color:#4a5568;line-height:1.6">Nuestro asistente con IA y equipo de consultoría te ayudan a identificar las herramientas perfectas para tu empresa.</p>
+            </div>
+            
+            <!-- Beneficio 2 -->
+            <div style="background:white;border-radius:12px;padding:2.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:linear-gradient(135deg,rgba(11,79,159,0.1),rgba(15,125,94,0.1));border-radius:50%"></div>
+                <div style="width:56px;height:56px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;position:relative;z-index:1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                        <line x1="6" y1="1" x2="6" y2="4"/>
+                        <line x1="10" y1="1" x2="10" y2="4"/>
+                        <line x1="14" y1="1" x2="14" y2="4"/>
+                    </svg>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Decide con Confianza</h3>
-                    <p>Toma la mejor decisión con toda la información que necesitas, 3x más rápido que investigando por tu cuenta.</p>
+                <h4 style="font-size:1.3rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Sin acoso comercial</h4>
+                <p style="color:#4a5568;line-height:1.6">Explora demos y contenido sin compartir tu contacto. Los vendors solo te contactan si tú lo autorizas.</p>
+            </div>
+            
+            <!-- Beneficio 3 -->
+            <div style="background:white;border-radius:12px;padding:2.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:linear-gradient(135deg,rgba(11,79,159,0.1),rgba(15,125,94,0.1));border-radius:50%"></div>
+                <div style="width:56px;height:56px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;position:relative;z-index:1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                </div>
+                <h4 style="font-size:1.3rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Proceso 3-4x más rápido</h4>
+                <p style="color:#4a5568;line-height:1.6">Compara propuestas, agenda múltiples demos y recibe cotizaciones en días, no en semanas.</p>
+            </div>
+            
+            <!-- Beneficio 4 -->
+            <div style="background:white;border-radius:12px;padding:2.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.06);position:relative;overflow:hidden">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:linear-gradient(135deg,rgba(11,79,159,0.1),rgba(15,125,94,0.1));border-radius:50%"></div>
+                <div style="width:56px;height:56px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;position:relative;z-index:1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="12" y1="20" x2="12" y2="10"/>
+                        <line x1="18" y1="20" x2="18" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="16"/>
+                    </svg>
+                </div>
+                <h4 style="font-size:1.3rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Visualiza, Reduce & Controla tus gastos de software</h4>
+                <p style="color:#4a5568;line-height:1.6">Monitorea el uso real de tus herramientas, centraliza contratos y optimiza tu inversión en software.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CON IMAGEN PROFESIONAL - SaaS Management -->
+    <div style="margin:6rem 2rem">
+        <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+            <div>
+                <div style="display:inline-block;background:#E8F4F8;color:#0B4F9F;padding:0.5rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;margin-bottom:1.5rem">SaaS Management</div>
+                <h2 style="font-size:2.8rem;font-weight:800;color:#0F1C3F;margin-bottom:1.5rem;line-height:1.2">Control total de tus gastos de software</h2>
+                <p style="font-size:1.1rem;color:#4a5568;line-height:1.7;margin-bottom:2rem">Descubre cuentas inactivas, optimiza licencias y toma decisiones basadas en datos reales de uso. Ahorra hasta un 30% en tus suscripciones de SaaS.</p>
+                <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem">
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Visibilidad completa</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Identifica todas las aplicaciones que tu equipo está usando, incluso las no autorizadas.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Optimización automática</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Recibe alertas sobre cuentas inactivas, licencias duplicadas y oportunidades de ahorro.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Gestión centralizada</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Administra contratos, renovaciones y pagos desde un solo lugar.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="https://ecosis.ai/" target="_blank" style="display:inline-block;background:#0B4F9F;color:white;padding:1rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:700;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(11,79,159,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">Conocer SaaS Management →</a>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop" alt="Profesional trabajando" style="width:100%;height:auto;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15)">
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CON IMAGEN - Comparación de Software -->
+    <div style="background:#F7FAFC;padding:6rem 2rem">
+        <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+            <div>
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop" alt="Equipo colaborando" style="width:100%;height:auto;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15)">
+            </div>
+            <div>
+                <div style="display:inline-block;background:#E8F4F8;color:#0B4F9F;padding:0.5rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;margin-bottom:1.5rem">Comparación Inteligente</div>
+                <h2 style="font-size:2.8rem;font-weight:800;color:#0F1C3F;margin-bottom:1.5rem;line-height:1.2">Encuentra y estandariza las mejores herramientas</h2>
+                <p style="font-size:1.1rem;color:#4a5568;line-height:1.7;margin-bottom:2rem">Compara funcionalidades, precios y opiniones reales de usuarios. Toma decisiones informadas sin perder tiempo navegando docenas de sitios web.</p>
+                <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem">
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0F7D5E;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Comparativas lado a lado</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Visualiza diferencias clave entre plataformas en una tabla fácil de entender.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0F7D5E;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Reviews verificadas</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Lee experiencias reales de empresas similares a la tuya.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0F7D5E;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Asistente con IA</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Recibe recomendaciones personalizadas basadas en tus necesidades.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" style="display:inline-block;background:#0F7D5E;color:white;padding:1rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:700;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(15,125,94,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">Comparar Software Ahora →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CON IMAGEN - Finanzas & Renovaciones -->
+    <div style="margin:6rem 2rem">
+        <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+            <div>
+                <div style="display:inline-block;background:#E8F4F8;color:#0B4F9F;padding:0.5rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;margin-bottom:1.5rem">Automatización Financiera</div>
+                <h2 style="font-size:2.8rem;font-weight:800;color:#0F1C3F;margin-bottom:1.5rem;line-height:1.2">Automatiza pagos y evita sorpresas</h2>
+                <p style="font-size:1.1rem;color:#4a5568;line-height:1.7;margin-bottom:2rem">Centraliza todos tus contratos, recibe alertas de renovación y negocia mejores precios con datos reales de uso. Nunca más te sorprenderán aumentos inesperados.</p>
+                <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem">
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Alertas de renovación</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Recibe notificaciones 90, 60 y 30 días antes de cada renovación.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Dashboard financiero</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Visualiza todos tus gastos de software en tiempo real.</p>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:start;gap:1rem">
+                        <div style="width:28px;height:28px;background:#0B4F9F;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.2rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <h4 style="font-weight:700;color:#0F1C3F;margin-bottom:0.3rem">Negociación asistida</h4>
+                            <p style="color:#4a5568;font-size:0.95rem">Nuestro equipo te ayuda a conseguir mejores precios con datos de mercado.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" style="display:inline-block;background:#0B4F9F;color:white;padding:1rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:700;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(11,79,159,0.3)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">Gestionar Finanzas →</a>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=600&fit=crop" alt="Análisis financiero" style="width:100%;height:auto;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15)">
+            </div>
+        </div>
+    </div>
+
+    <!-- PARA QUIÉN ES -->
+    <div style="margin:6rem 2rem">
+        <h3 style="font-size:2.5rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:4rem">¿Para quién es Veraka?</h3>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:3rem;max-width:1200px;margin:0 auto">
+            <!-- Para Empresas -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:3rem;text-align:center;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-8px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </div>
+                <h4 style="font-size:1.6rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Para empresas que buscan crecer</h4>
+                <p style="color:#4a5568;line-height:1.6;margin-bottom:2rem">Si eres una empresa mediana buscando las mejores herramientas tecnológicas sin perder tiempo ni recursos en el proceso.</p>
+                <a href="#" style="display:inline-block;color:#0B4F9F;font-weight:600;text-decoration:none;border-bottom:2px solid #0B4F9F;padding-bottom:0.25rem">Conoce más para empresas →</a>
+            </div>
+            
+            <!-- Para Vendors -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:3rem;text-align:center;transition:all 0.3s" onmouseover="this.style.borderColor='#0F7D5E';this.style.transform='translateY(-8px)';this.style.boxShadow='0 12px 40px rgba(15,125,94,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="width:100px;height:100px;background:linear-gradient(135deg,#0F7D5E,#0B4F9F);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
+                <h4 style="font-size:1.6rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Para vendors que quieren vender más</h4>
+                <p style="color:#4a5568;line-height:1.6;margin-bottom:2rem">Si vendes software y buscas leads calificados, mejor visibilidad y un proceso de ventas más eficiente.</p>
+                <a href="#" style="display:inline-block;color:#0F7D5E;font-weight:600;text-decoration:none;border-bottom:2px solid #0F7D5E;padding-bottom:0.25rem">Conoce más para vendors →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORÍAS POPULARES CON LOGOS -->
+    <div style="margin:6rem 2rem">
+        <h3 style="font-size:2.5rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:3rem">Categorías de software más populares</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:1400px;margin:0 auto">
+            
+            <!-- CRM -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 24px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">CRM</h4>
+                        <p style="font-size:0.85rem;color:#718096">30+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem;align-items:center">
+                    <div style="width:28px;height:28px;background:#00A1E0;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">SF</div>
+                    <div style="width:28px;height:28px;background:#FF7A59;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">HS</div>
+                    <div style="width:28px;height:28px;background:#E42527;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">Z</div>
+                    <span style="font-size:0.75rem;color:#718096">+27 más</span>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Gestiona relaciones con clientes y ventas</p>
+            </div>
+
+            <!-- Project Management -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Project Management</h4>
+                        <p style="font-size:0.85rem;color:#718096">15+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#FF3D57;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">M</div>
+                    <div style="width:28px;height:28px;background:#F06A6A;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">A</div>
+                    <div style="width:28px;height:28px;background:#0079BF;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">T</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Organiza equipos y tareas eficientemente</p>
+            </div>
+
+            <!-- Video Conferencing -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Video Conferencing</h4>
+                        <p style="font-size:0.85rem;color:#718096">8+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#2D8CFF;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">Z</div>
+                    <div style="width:28px;height:28px;background:#464EB8;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">MS</div>
+                    <div style="width:28px;height:28px;background:#00897B;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">GM</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Reuniones virtuales y colaboración remota</p>
+            </div>
+
+            <!-- E-Commerce Platforms -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">E-Commerce Platforms</h4>
+                        <p style="font-size:0.85rem;color:#718096">12+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#96BF48;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">S</div>
+                    <div style="width:28px;height:28px;background:#96588A;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">W</div>
+                    <div style="width:28px;height:28px;background:#EE6123;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">M</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Vende online y gestiona tu tienda digital</p>
+            </div>
+
+            <!-- Marketing Automation -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Marketing Automation</h4>
+                        <p style="font-size:0.85rem;color:#718096">18+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#FFE01B;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#241C15;font-weight:700;font-size:0.7rem">MC</div>
+                    <div style="width:28px;height:28px;background:#3B5998;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.65rem">AC</div>
+                    <div style="width:28px;height:28px;background:#5C4C9F;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">MK</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Automatiza campañas y genera leads</p>
+            </div>
+
+            <!-- Accounting -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Accounting</h4>
+                        <p style="font-size:0.85rem;color:#718096">12+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#2CA01C;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.65rem">QB</div>
+                    <div style="width:28px;height:28px;background:#2DBECD;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">AL</div>
+                    <div style="width:28px;height:28px;background:#003B5C;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">XR</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Gestiona finanzas y cumplimiento fiscal</p>
+            </div>
+
+            <!-- Expense Management -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Expense Management</h4>
+                        <p style="font-size:0.85rem;color:#718096">10+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#00D2B8;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">EX</div>
+                    <div style="width:28px;height:28px;background:#F26531;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">CO</div>
+                    <div style="width:28px;height:28px;background:#05BE51;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">RY</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Control de gastos y reembolsos corporativos</p>
+            </div>
+
+            <!-- ERP Systems -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">ERP Systems</h4>
+                        <p style="font-size:0.85rem;color:#718096">25+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#008FD3;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.65rem">SAP</div>
+                    <div style="width:28px;height:28px;background:#C74634;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">OR</div>
+                    <div style="width:28px;height:28px;background:#00A4EF;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">D</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Integra todos los procesos empresariales</p>
+            </div>
+
+            <!-- Online Backup -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">Online Backup</h4>
+                        <p style="font-size:0.85rem;color:#718096">8+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#0061FF;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">DB</div>
+                    <div style="width:28px;height:28px;background:#1877F2;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">GD</div>
+                    <div style="width:28px;height:28px;background:#EA4335;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">BK</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Respaldo y recuperación de datos en la nube</p>
+            </div>
+
+            <!-- AI Chatbots -->
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)'">
+                <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+                    <div style="width:48px;height:48px;background:#F7FAFC;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F1C3F" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.1rem;font-weight:700;color:#0F1C3F">AI Chatbots</h4>
+                        <p style="font-size:0.85rem;color:#718096">20+ productos</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                    <div style="width:28px;height:28px;background:#10A37F;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.65rem">GPT</div>
+                    <div style="width:28px;height:28px;background:#CC9B7A;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">CL</div>
+                    <div style="width:28px;height:28px;background:#FF6B35;border-radius:4px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem">IF</div>
+                </div>
+                <p style="font-size:0.9rem;color:#4a5568">Asistentes inteligentes con IA conversacional</p>
+            </div>
+
+        </div>
+
+        <div style="text-align:center;margin-top:3rem">
+            <a href="#" style="display:inline-block;color:#0B4F9F;font-weight:600;text-decoration:none;border-bottom:2px solid #0B4F9F;padding-bottom:0.25rem">Ver todas las categorías →</a>
+        </div>
+    </div>
+
+    <!-- RESEÑAS -->
+    <div style="margin:6rem 2rem;text-align:center">
+        <h3 style="font-size:2.5rem;font-weight:800;color:#0F1C3F;margin-bottom:1rem">Lo que dicen nuestros usuarios</h3>
+        <p style="font-size:1.1rem;color:#4a5568;margin-bottom:4rem">Miles de empresas confían en Veraka</p>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;max-width:1400px;margin:0 auto">
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem;text-align:left">
+                <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                    <span style="color:#FFA500">★★★★★</span>
+                </div>
+                <p style="color:#4a5568;margin-bottom:1.5rem">"Veraka ha sido un lugar increíble para encontrar y revisar software. Es realmente divertido ver mis reseñas subir y ser marcadas como útiles por otros usuarios."</p>
+                <div style="display:flex;align-items:center;gap:1rem">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt="Ana López">
+                    <div>
+                        <p style="font-weight:700;color:#0F1C3F">Ana López</p>
+                        <p style="font-size:0.85rem;color:#718096">Gerente de Operaciones, Lanus S.A. de C.V.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem;text-align:left">
+                <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                    <span style="color:#FFA500">★★★★★</span>
+                </div>
+                <p style="color:#4a5568;margin-bottom:1.5rem">"El equipo de asesores realmente conoce el mercado. Me ayudaron a comparar 5 ERPs diferentes."</p>
+                <div style="display:flex;align-items:center;gap:1rem">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt="Carlos Sánchez">
+                    <div>
+                        <p style="font-weight:700;color:#0F1C3F">Carlos Sánchez</p>
+                        <p style="font-size:0.85rem;color:#718096">CFO, Innovatech Solutions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem;text-align:left">
+                <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                    <span style="color:#FFA500">★★★★★</span>
+                </div>
+                <p style="color:#4a5568;margin-bottom:1.5rem">"Lo que más me gusta es la transparencia en los precios y las reseñas verificadas."</p>
+                <div style="display:flex;align-items:center;gap:1rem">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces" style="width:48px;height:48px;border-radius:50%;object-fit:cover" alt="Jorge Ramírez">
+                    <div>
+                        <p style="font-weight:700;color:#0F1C3F">Jorge Ramírez</p>
+                        <p style="font-size:0.85rem;color:#718096">CEO, Grupo Mercantil del Norte</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Benefits -->
-    <section class="benefits">
-        <div class="container">
-            <div class="benefits-grid">
-                <div class="benefit">
-                    <h3>🚀 3x más rápido</h3>
-                    <p>Ahorra semanas de investigación. Encuentra el software ideal en minutos.</p>
+    <!-- VENDE EN VERAKA - SECCIÓN COMPLETA -->
+    <div id="vende-en-veraka" style="margin:6rem 2rem">
+        <div style="max-width:1400px;margin:0 auto">
+            <!-- CTA Superior - Expertos -->
+            <div style="background:linear-gradient(135deg,#0B4F9F,#0F7D5E);color:white;padding:4rem 3rem;margin-bottom:5rem;border-radius:20px">
+                <div style="max-width:900px;margin:0 auto;text-align:center">
+                    <h2 style="font-size:2.5rem;font-weight:800;margin-bottom:1.5rem;line-height:1.2">Platica con los mejores expertos en software</h2>
+                    
+                    <p style="font-size:1.2rem;margin-bottom:3rem;opacity:0.95;line-height:1.6">
+                        Somos <strong>3x más rápido</strong>, te ayudamos a bajar tu dolor y te conectamos con las mejores marcas y revendedores.
+                    </p>
+
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin:3rem auto 3rem;max-width:800px;text-align:center">
+                        <div>
+                            <div style="font-size:3rem;font-weight:800;margin-bottom:0.5rem">3x</div>
+                            <div style="font-size:1rem;opacity:0.9">Más rápido que búsqueda tradicional</div>
+                        </div>
+                        <div>
+                            <div style="font-size:3rem;font-weight:800;margin-bottom:0.5rem">100%</div>
+                            <div style="font-size:1rem;opacity:0.9">Gratuito y sin acoso</div>
+                        </div>
+                        <div>
+                            <div style="font-size:3rem;font-weight:800;margin-bottom:0.5rem">+150</div>
+                            <div style="font-size:1rem;opacity:0.9">Marcas y revendedores</div>
+                        </div>
+                    </div>
+
+                    <a href="https://calendly.com/tu-usuario" target="_blank" style="display:inline-block;background:white;color:#0B4F9F;padding:1.25rem 3rem;border-radius:50px;text-decoration:none;font-weight:700;font-size:1.2rem;box-shadow:0 10px 40px rgba(0,0,0,0.2);transition:all 0.3s" onmouseover="this.style.transform='translateY(-3px) scale(1.05)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
+                        Solicitar asesoría sin costo
+                    </a>
+
+                    <p style="font-size:0.9rem;margin-top:2rem;opacity:0.8">📞 Respuesta en menos de 24 horas | 💬 Sin presión de ventas</p>
                 </div>
-                <div class="benefit">
-                    <h3>🔒 Sin acoso comercial</h3>
-                    <p>Compara sin presión. Tu información está protegida.</p>
+            </div>
+
+            <!-- Header -->
+            <div style="text-align:center;margin-bottom:4rem">
+                <div style="display:inline-block;background:#E8F4F8;color:#0B4F9F;padding:0.5rem 1rem;border-radius:50px;font-size:0.9rem;font-weight:600;margin-bottom:1.5rem">Para Marcas de Software & Revendedores</div>
+                <h2 style="font-size:3rem;font-weight:800;color:#0F1C3F;margin-bottom:1.5rem;line-height:1.2">Vende tu Software dentro de Veraka</h2>
+                <p style="font-size:1.2rem;color:#4a5568;line-height:1.7;max-width:900px;margin:0 auto">Conecta con compradores verificados, acelera tus ciclos de venta y genera más ingresos sin complicaciones. Ideal para SaaS, AI Tools, Marcas B2B y Resellers Autorizados.</p>
+            </div>
+
+            <!-- Por qué unirte -->
+            <div style="margin-bottom:5rem">
+                <h3 style="font-size:2.2rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:3rem">Por qué unirte a Veraka</h3>
+                
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2.5rem">
+                    <!-- Beneficio 1 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:2.5rem;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <polyline points="17 11 19 13 23 9"/>
+                            </svg>
+                        </div>
+                        <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Leads Más Calificados</h4>
+                        <p style="color:#4a5568;line-height:1.7">Recibe compradores reales listos para decidir, filtrados por industria, tamaño y necesidad. Menos prospección — más oportunidades que avanzan.</p>
+                    </div>
+
+                    <!-- Beneficio 2 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:2.5rem;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Aumenta tus Ganancias</h4>
+                        <p style="color:#4a5568;line-height:1.7">Cierra más ventas gracias a flujos automáticos de demos, propuestas y pagos. Tu producto aparece en búsquedas, comparaciones y recomendaciones inteligentes.</p>
+                    </div>
+
+                    <!-- Beneficio 3 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:2.5rem;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="7.5 4.21 12 6.81 16.5 4.21"/>
+                                <polyline points="7.5 19.79 7.5 14.6 3 12"/>
+                                <polyline points="21 12 16.5 14.6 16.5 19.79"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                        <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Feedback Real de tus Prospectos</h4>
+                        <p style="color:#4a5568;line-height:1.7">Descubre por qué un prospecto no compró o dejó de responder. Veraka clasifica el feedback y te da insights para mejorar tu pitch y subir tu tasa de cierre.</p>
+                    </div>
+
+                    <!-- Beneficio 4 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:2.5rem;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Diseñado para Resellers Autorizados</h4>
+                        <p style="color:#4a5568;line-height:1.7">Ideal si vendes Salesforce, HubSpot, Microsoft, Google, AWS o cualquier SaaS enterprise. Carga tu catálogo, recibe leads y mejora tus márgenes con procesos centralizados.</p>
+                    </div>
+
+                    <!-- Beneficio 5 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:16px;padding:2.5rem;transition:all 0.3s" onmouseover="this.style.borderColor='#0B4F9F';this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 40px rgba(11,79,159,0.15)'" onmouseout="this.style.borderColor='#E2E8F0';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                        <div style="width:64px;height:64px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
+                        <h4 style="font-size:1.4rem;font-weight:700;color:#0F1C3F;margin-bottom:1rem">Analítica en Tiempo Real</h4>
+                        <p style="color:#4a5568;line-height:1.7">Sabe quién vio tu perfil, tus demos y tus propuestas. Optimiza tu funnel con datos, no suposiciones.</p>
+                    </div>
                 </div>
-                <div class="benefit">
-                    <h3>🎯 Expertos gratis</h3>
-                    <p>Consulta con especialistas sin costo adicional.</p>
+            </div>
+
+            <!-- Cómo funciona -->
+            <div style="background:#F7FAFC;border-radius:20px;padding:4rem 3rem;margin-bottom:5rem">
+                <h3 style="font-size:2.2rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:3rem">Cómo Funciona</h3>
+                
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem">
+                    <div style="text-align:center">
+                        <div style="width:60px;height:60px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:white;font-size:1.5rem;font-weight:800">1</div>
+                        <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.5rem">Crea tu perfil</p>
+                        <p style="font-size:0.9rem;color:#4a5568">Como marca o reseller</p>
+                    </div>
+                    
+                    <div style="text-align:center">
+                        <div style="width:60px;height:60px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:white;font-size:1.5rem;font-weight:800">2</div>
+                        <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.5rem">Sube tu catálogo</p>
+                        <p style="font-size:0.9rem;color:#4a5568">Planes, verticales y diferenciales</p>
+                    </div>
+                    
+                    <div style="text-align:center">
+                        <div style="width:60px;height:60px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:white;font-size:1.5rem;font-weight:800">3</div>
+                        <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.5rem">Recibe leads calificados</p>
+                        <p style="font-size:0.9rem;color:#4a5568">Automáticamente</p>
+                    </div>
+                    
+                    <div style="text-align:center">
+                        <div style="width:60px;height:60px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:white;font-size:1.5rem;font-weight:800">4</div>
+                        <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.5rem">Agenda demos y propuestas</p>
+                        <p style="font-size:0.9rem;color:#4a5568">Desde Veraka</p>
+                    </div>
+                    
+                    <div style="text-align:center">
+                        <div style="width:60px;height:60px;background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:white;font-size:1.5rem;font-weight:800">5</div>
+                        <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.5rem">Cierra más rápido</p>
+                        <p style="font-size:0.9rem;color:#4a5568">Todo centralizado</p>
+                    </div>
                 </div>
-                <div class="benefit">
-                    <h3>🇲🇽 Enfoque LATAM</h3>
-                    <p>Herramientas que funcionan en México y Latinoamérica.</p>
+            </div>
+
+            <!-- Testimoniales -->
+            <div style="margin-bottom:5rem">
+                <h3 style="font-size:2.2rem;font-weight:800;color:#0F1C3F;text-align:center;margin-bottom:3rem">Testimoniales</h3>
+                
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem">
+                    <!-- Testimonial 1 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+                            <div style="width:50px;height:50px;background:linear-gradient(135deg,#2E5AAC,#4B7FDB);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.2rem">S</div>
+                            <div>
+                                <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">SoftNexus Cloud</p>
+                                <p style="font-size:0.85rem;color:#718096">Gestión de datos y automatización</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                            <span style="color:#FFA500">★★★★★</span>
+                        </div>
+                        <p style="color:#4a5568;margin-bottom:1rem;line-height:1.6">"Veraka nos genera leads que ya están listos para decidir. La calidad es superior a cualquier otro canal."</p>
+                        <p style="font-weight:600;color:#0F1C3F;font-size:0.9rem">Mariana Torres, Head of Growth</p>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+                            <div style="width:50px;height:50px;background:linear-gradient(135deg,#7B2CBF,#9D4EDD);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.2rem">F</div>
+                            <div>
+                                <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">ScaleForce Solutions</p>
+                                <p style="font-size:0.85rem;color:#718096">Revenue intelligence & sales automation</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                            <span style="color:#FFA500">★★★★★</span>
+                        </div>
+                        <p style="color:#4a5568;margin-bottom:1rem;line-height:1.6">"Incrementamos 3x nuestras demos en menos de 60 días. El funnel es directo y sin fricción."</p>
+                        <p style="font-weight:600;color:#0F1C3F;font-size:0.9rem">Luis Fernández, Director Comercial</p>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+                            <div style="width:50px;height:50px;background:linear-gradient(135deg,#F59E0B,#FCD34D);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.2rem">👁</div>
+                            <div>
+                                <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">InsightAI Tools</p>
+                                <p style="font-size:0.85rem;color:#718096">AI para análisis y productividad</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                            <span style="color:#FFA500">★★★★★</span>
+                        </div>
+                        <p style="color:#4a5568;margin-bottom:1rem;line-height:1.6">"El feedback automático de prospectos nos permitió ajustar nuestro pitch y subir la tasa de cierre 22%."</p>
+                        <p style="font-weight:600;color:#0F1C3F;font-size:0.9rem">Carla Méndez, Co-Founder</p>
+                    </div>
+
+                    <!-- Testimonial 4 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+                            <div style="width:50px;height:50px;background:linear-gradient(135deg,#3B82F6,#93C5FD);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.2rem">🌉</div>
+                            <div>
+                                <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">CloudBridge Partners</p>
+                                <p style="font-size:0.85rem;color:#718096">Reseller enterprise de CRM y Cloud</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                            <span style="color:#FFA500">★★★★★</span>
+                        </div>
+                        <p style="color:#4a5568;margin-bottom:1rem;line-height:1.6">"Para nosotros, como reseller enterprise, Veraka es un canal que paga solo. Menos prospección, más ventas."</p>
+                        <p style="font-weight:600;color:#0F1C3F;font-size:0.9rem">Jorge Álvarez, Partner Manager</p>
+                    </div>
+
+                    <!-- Testimonial 5 -->
+                    <div style="background:white;border:2px solid #E2E8F0;border-radius:12px;padding:2rem">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+                            <div style="width:50px;height:50px;background:linear-gradient(135deg,#F97316,#FDBA74);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.2rem">⭐</div>
+                            <div>
+                                <p style="font-weight:700;color:#0F1C3F;margin-bottom:0.2rem">NovaWork Systems</p>
+                                <p style="font-size:0.85rem;color:#718096">Colaboración, workflows y automatización</p>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.25rem;margin-bottom:1rem">
+                            <span style="color:#FFA500">★★★★★</span>
+                        </div>
+                        <p style="color:#4a5568;margin-bottom:1rem;line-height:1.6">"Los datos en tiempo real nos ayudan a priorizar mejor y cerrar más rápido. Es como tener un SDR activo 24/7."</p>
+                        <p style="font-weight:600;color:#0F1C3F;font-size:0.9rem">Stephanie Rojas, Sales Lead</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Final -->
+            <div style="background:linear-gradient(135deg,#0B4F9F,#0F7D5E);border-radius:20px;padding:4rem 3rem;text-align:center;color:white">
+                <div style="width:80px;height:80px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;backdrop-filter:blur(10px)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h3 style="font-size:2.5rem;font-weight:800;margin-bottom:1.5rem">Empieza hoy</h3>
+                <p style="font-size:1.2rem;margin-bottom:3rem;opacity:0.95">Únete a las marcas y resellers que ya están cerrando más ventas con Veraka</p>
+                
+                <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap">
+                    <a href="#" style="display:inline-block;background:white;color:#0B4F9F;padding:1.25rem 3rem;border-radius:50px;text-decoration:none;font-weight:700;font-size:1.1rem;transition:all 0.3s" onmouseover="this.style.transform='translateY(-3px) scale(1.05)';this.style.boxShadow='0 10px 30px rgba(255,255,255,0.3)'" onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='none'">Crear Perfil de Marca / Reseller</a>
+                    
+                    <a href="https://calendly.com/tu-usuario" target="_blank" style="display:inline-block;background:transparent;color:white;padding:1.25rem 3rem;border-radius:50px;text-decoration:none;font-weight:700;font-size:1.1rem;border:2px solid white;transition:all 0.3s" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">Solicitar una Demo</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- CTA Section -->
-    <section id="contact" class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>¿Necesitas ayuda para elegir?</h2>
-                <p>Agenda una consulta gratuita con nuestros expertos</p>
-                <button class="btn-primary-large">Agendar Consulta Gratuita</button>
-                <p class="cta-note">Sin compromiso • 100% confidencial • Respuesta en 24 horas</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Veraka</h4>
-                    <p>La plataforma de comparación de software más completa para empresas en LATAM.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Categorías</h4>
-                    <a href="hr.html">Recursos Humanos</a>
-                    <a href="finance.html">Finanzas</a>
-                    <a href="marketing.html">Marketing</a>
-                    <a href="sales.html">Ventas</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Recursos</h4>
-                    <a href="#">Blog</a>
-                    <a href="#">Guías</a>
-                    <a href="#">FAQs</a>
-                    <a href="#">Contacto</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="#">Privacidad</a>
-                    <a href="#">Términos</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Veraka. Todos los derechos reservados.</p>
-            </div>
-        </div>
+    <footer style="background:#1a202c;color:white;padding:3rem 2rem;text-align:center">
+        <p style="font-size:1.5rem;font-weight:700;margin-bottom:1rem">Veraka</p>
+        <p style="color:#a0aec0">© 2025 Veraka. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/528110000000?text=Hola,%20necesito%20ayuda%20para%20encontrar%20software" 
+       target="_blank" 
+       class="whatsapp-button"
+       title="Chatea con nosotros en WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+    </a>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div>
+                    <h3 style="font-weight:700;margin-bottom:0.25rem">Asistente IA de Veraka</h3>
+                    <p style="font-size:0.85rem;opacity:0.9">Powered by Claude</p>
+                </div>
+                <button onclick="toggleChat()" style="background:none;border:none;color:white;font-size:1.5rem;cursor:pointer">×</button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message">
+                    <div class="message-avatar assistant-avatar">AI</div>
+                    <div>
+                        <div class="message-content">
+                            <p>¡Hola! 👋 Soy tu asistente de Veraka. Puedo ayudarte a:</p>
+                            <ul style="margin:0.5rem 0 0 1.2rem;font-size:0.9rem">
+                                <li>Encontrar el software perfecto para tu negocio</li>
+                                <li>Comparar diferentes herramientas</li>
+                                <li>Responder preguntas sobre CRM, ERP, AI Tools y más</li>
+                            </ul>
+                            <p style="margin-top:0.75rem">¿En qué puedo ayudarte hoy?</p>
+                        </div>
+                        <div class="quick-options">
+                            <div class="quick-option" onclick="sendQuickMessage('Necesito un CRM')">Necesito un CRM</div>
+                            <div class="quick-option" onclick="sendQuickMessage('Comparar ERP')">Comparar ERP</div>
+                            <div class="quick-option" onclick="sendQuickMessage('AI Tools para marketing')">AI Tools</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <div class="chat-input-box">
+                    <input type="text" id="chatInput" placeholder="Escribe tu pregunta..." onkeypress="handleKeyPress(event)">
+                    <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="chat-button" onclick="toggleChat()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('active');
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('chatInput').value = message;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Disable send button
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            
+            // Show typing indicator
+            const typingId = addTypingIndicator();
+            
+            try {
+                // Call Claude API
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        messages: [
+                            { 
+                                role: "user", 
+                                content: `Eres un asistente experto en software empresarial de Veraka, una plataforma que ayuda a encontrar y comparar CRM, ERP, SaaS y AI Tools.
+
+Usuario pregunta: ${message}
+
+Responde de forma amigable, concisa y útil. Si preguntan por software específico, menciona opciones populares como Salesforce, HubSpot, SAP, Oracle, ChatGPT, etc. Siempre ofrece ayuda adicional al final.`
+                            }
+                        ],
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Remove typing indicator
+                removeTypingIndicator(typingId);
+                
+                // Extract text from response
+                const assistantMessage = data.content
+                    .filter(item => item.type === "text")
+                    .map(item => item.text)
+                    .join("\n");
+                
+                // Add assistant message
+                addMessage(assistantMessage, 'assistant');
+                
+            } catch (error) {
+                removeTypingIndicator(typingId);
+                addMessage('Lo siento, hubo un error. Por favor intenta de nuevo.', 'assistant');
+                console.error('Error:', error);
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        function addMessage(text, type) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `message-avatar ${type === 'user' ? 'user-avatar' : 'assistant-avatar'}`;
+            avatar.textContent = type === 'user' ? 'TÚ' : 'AI';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = text.replace(/\n/g, '<br>');
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            messagesDiv.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message';
+            typingDiv.id = 'typing-indicator';
+            
+            typingDiv.innerHTML = `
+                <div class="message-avatar assistant-avatar">AI</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            return 'typing-indicator';
+        }
+
+        function removeTypingIndicator(id) {
+            const indicator = document.getElementById(id);
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function searchFor(term) {
+            document.getElementById('searchInput').value = term;
+        }
+    </script>
